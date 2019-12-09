@@ -3,6 +3,10 @@
 Layers_Ds::Layers_Ds(int nInputNum, int nOutputNum, int nInputWidth, int nStride, const char *pcConvDwWname, const char *pcDwBnMname, const char *pcDwBnVname, const char *pcDwBnFname, const char *pcDwBnBname,
     const char *pcConvSepWname, const char *pcSepBnMname, const char *pcSepBnVname, const char *pcSepBnFname, const char *pcSepBnBname)
 {
+	input_size_ = nInputNum;
+	output_size_ = nOutputNum;
+
+
     m_ConvlayerDw = new ConvLayer(pcConvDwWname, nInputNum, nInputNum, nInputWidth, 3, 1, nStride, nInputNum);
     m_ConvDwBn = new BatchNormalLayer(pcDwBnMname, pcDwBnVname, pcDwBnFname, pcDwBnBname, nInputNum, nInputWidth / nStride);
     m_RelulayerDw = new ReluLayer(m_ConvDwBn->GetOutputSize());

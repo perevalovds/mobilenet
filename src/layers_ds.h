@@ -20,7 +20,13 @@ public:
     void forward(float *pfInput);
     float *GetOutput();
 
+	int input_size() { return input_size_; }
+	int output_size() { return output_size_; }
+
 private:
+	int input_size_ = 0;
+	int output_size_ = 0;
+
     float *m_nOutput;
     ConvLayer *m_ConvlayerDw, *m_ConvlayerSep;
     BatchNormalLayer *m_ConvDwBn, *m_ConvSepBn;

@@ -78,18 +78,19 @@ void Network::setup(string path) {
     m_Sigmoidlayer8 = new SigmoidLayer(12);
 
 	
-	m_vcClass.push_back("室内");
-	m_vcClass.push_back("人像");
+
+	m_vcClass.push_back("indoor");
+	m_vcClass.push_back("portrait");
 	m_vcClass.push_back("LDR");
-	m_vcClass.push_back("绿植");
-	m_vcClass.push_back("商场");
-	m_vcClass.push_back("沙滩");
-	m_vcClass.push_back("逆光");
-	m_vcClass.push_back("日落");
-	m_vcClass.push_back("蓝天");
-	m_vcClass.push_back("雪景");
-	m_vcClass.push_back("夜景");
-	m_vcClass.push_back("文本");
+	m_vcClass.push_back("green plant");
+	m_vcClass.push_back("mall");
+	m_vcClass.push_back("beach");
+	m_vcClass.push_back("backlight");
+	m_vcClass.push_back("sunset");
+	m_vcClass.push_back("blue sky");
+	m_vcClass.push_back("snow scene");
+	m_vcClass.push_back("night view");
+	m_vcClass.push_back("text");
 
 	cout << "Initializing Done..." << endl;
 	cout << endl;
@@ -101,7 +102,7 @@ Network::~Network()
 {
 	delete m_Readdata;
     delete m_Layers_bn;
-    delete m_Layers_ds1;
+    //delete m_Layers_ds1;
     delete m_Layers_ds2_1;
     delete m_Layers_ds2_2;
     delete m_Layers_ds3_1;
@@ -125,21 +126,39 @@ Network::~Network()
 float *Network::Forward(const string &file_name)
 {
 
-    m_Layers_bn->forward(m_Readdata->ReadInput(file_name));
+	float time0 = ofGetElapsedTimef();  //!!!
+	
+	m_Layers_bn->forward(m_Readdata->ReadInput(file_name));
 
-    m_Layers_ds2_1->forward(m_Layers_bn->GetOutput());
+	
+	float time1 = ofGetElapsedTimef();  //!!!
+
+	m_Layers_ds2_1->forward(m_Layers_bn->GetOutput());
     m_Layers_ds2_2->forward(m_Layers_ds2_1->GetOutput());
     
     m_Layers_ds3_1->forward(m_Layers_ds2_2->GetOutput());
     m_Layers_ds3_2->forward(m_Layers_ds3_1->GetOutput());
 
+	float time2 = ofGetElapsedTimef();  //!!!
+	cout << "m_Layers_ds3_1 " << m_Layers_ds3_1->output_size() << endl;
+
     m_Layers_ds4_1->forward(m_Layers_ds3_2->GetOutput());
-    m_Layers_ds4_2->forward(m_Layers_ds4_1->GetOutput());
+	
+	m_Layers_ds4_2->forward(m_Layers_ds4_1->GetOutput());
+
+	float time3 = ofGetElapsedTimef();  //!!!
+	cout << "m_Layers_ds4_2 " << m_Layers_ds4_2->output_size() << endl;
+
+	/*
 
     m_Layers_ds5_1->forward(m_Layers_ds4_2->GetOutput());
     m_Layers_ds5_2->forward(m_Layers_ds5_1->GetOutput());
     m_Layers_ds5_3->forward(m_Layers_ds5_2->GetOutput());
-    m_Layers_ds5_4->forward(m_Layers_ds5_3->GetOutput());
+
+	float time3 = ofGetElapsedTimef();   //!!!
+	//cout << "m_Layers_ds5_3 " << m_Layers_ds5_3->output_size() << endl;
+
+	m_Layers_ds5_4->forward(m_Layers_ds5_3->GetOutput());
     m_Layers_ds5_5->forward(m_Layers_ds5_4->GetOutput());
     m_Layers_ds5_6->forward(m_Layers_ds5_5->GetOutput());
 
@@ -147,11 +166,16 @@ float *Network::Forward(const string &file_name)
 
     m_Poollayer6->forward(m_Layers_ds6->GetOutput());
 
+	float time4 = ofGetElapsedTimef();   //!!!
+
+
     //m_Convlayer7->forward(m_Poollayer6->GetOutput());
     m_Fclayer7->forward(m_Poollayer6->GetOutput());
 
     //m_Sigmoidlayer8->forward(m_Convlayer7->GetOutput());
     m_Sigmoidlayer8->forward(m_Fclayer7->GetOutput());
+
+	float time5 = ofGetElapsedTimef();   //!!!
 
     float *pfOutput = m_Sigmoidlayer8->GetOutput();
 	vector <int> argmax;
@@ -174,6 +198,15 @@ float *Network::Forward(const string &file_name)
 		cout << Max[i] << ": " << argmax[i] << ": " << m_vcClass[argmax[i]] << endl;
 	}
 	cout << endl;
-    
-    return pfOutput;
+	*/
+
+	cout << "times: " << endl;
+	cout << "    1: " << time1 - time0 << endl;
+	cout << "    2: " << time2 - time0 << endl;
+	cout << "    3: " << time3 - time0 << endl;
+	//cout << "    4: " << time4 - time0 << endl;
+	//cout << "    5: " << time5 - time0 << endl;
+
+    //return pfOutput;
+	return 0;
 }
